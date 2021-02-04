@@ -14,10 +14,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json())
 
 app.get('/usuario', verificaToken, (req, res) => {
-    /**res.json({
-        ok: true,
-        usuario: req.usuario
-    });**/
 
     //res.json('get usuario local');
     let desde = req.query.desde || 0;
