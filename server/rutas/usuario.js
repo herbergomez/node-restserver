@@ -1,5 +1,6 @@
 const express = require('express');
 const bcript = require('bcrypt');
+const { verificaToken, verificaAdminROLE } = require('../middlewares/autenticacion');
 const _ = require('underscore');
 const Usuario = require('../modelos/usuario');
 const app = express();
@@ -12,7 +13,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json())
 
-app.get('/usuario', function(req, res) {
+app.get('/usuario', verificaToken, (req, res) => {
+    /**res.json({
+        ok: true,
+        usuario: req.usuario
+    });**/
+
     //res.json('get usuario local');
     let desde = req.query.desde || 0;
     let paginado = req.query.limite || 5;
@@ -40,7 +46,7 @@ app.get('/usuario', function(req, res) {
         });
 });
 
-app.post('/usuario', function(req, res) {
+app.post('/usuario', [verificaToken, verificaAdminROLE], (req, res) => {
     let body = req.body;
 
     let usuario = new Usuario({
@@ -66,7 +72,7 @@ app.post('/usuario', function(req, res) {
         })
     });
 });
-app.put('/usuario/:id', function(req, res) {
+app.put('/usuario/:id', [verificaToken, verificaAdminROLE], (req, res) => {
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
 
@@ -83,7 +89,7 @@ app.put('/usuario/:id', function(req, res) {
         })
     });
 });
-app.delete('/usuario/:id', function(req, res) {
+app.delete('/usuario/:id', [verificaToken, verificaAdminROLE], (req, res) => {
     let id = req.params.id;
     let body = _.pick(req.body, ['estado']);
     body.estado = false;

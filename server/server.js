@@ -9,10 +9,9 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
-app.use(require('./rutas/usuario'));
 
-
-
+//configuracion global de rutas
+app.use(require('./rutas/index'));
 
 
 mongoose.connect(process.env.URLDB, {
